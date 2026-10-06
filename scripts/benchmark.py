@@ -114,6 +114,7 @@ async def run(args):
     result = {
         "timestamp_utc": datetime.now(UTC).isoformat(),
         "backend": args.backend,
+        "model_revision": args.model_revision,
         "model": args.model,
         "hardware": hardware(),
         "configuration": {
@@ -159,6 +160,7 @@ def main():
     parser.add_argument("--url", default="http://127.0.0.1:8000")
     parser.add_argument("--model", default=os.environ.get("MODEL_ID", ""))
     parser.add_argument("--backend", required=True, help="Actual engine and version")
+    parser.add_argument("--model-revision", default=os.environ.get("MODEL_REVISION", "unrecorded"))
     parser.add_argument("--requests", type=int, default=12)
     parser.add_argument("--concurrency", type=int, default=1)
     parser.add_argument("--max-tokens", type=int, default=128)

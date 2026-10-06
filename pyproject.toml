@@ -16,9 +16,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "pytest-asyncio>=0.25,<2", "ruff>=0.11,<1"]
+report = ["matplotlib>=3.9,<4"]
 
 [tool.setuptools.packages.find]
 include = ["gateway*"]
+
+[tool.setuptools.package-data]
+gateway = ["static/*"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

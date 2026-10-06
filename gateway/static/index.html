@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLM Inference Platform · Sunil Mehta</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-icon">↗</span> INFERENCE<span class="brand-light"> / LAB</span></a>
+      <nav aria-label="Project links"><a href="/docs" target="_blank" rel="noopener">API docs ↗</a><a href="https://github.com/sunilmehta-si/llm-inference-platform" target="_blank" rel="noopener">GitHub ↗</a></nav>
+    </header>
+    <section class="intro">
+      <div class="eyebrow">BUILT BY SUNIL MEHTA · LLM SYSTEMS & PLATFORM ENGINEERING</div>
+      <h1>Local compute.<br><span>Live inference.</span></h1>
+      <p>An open model, running on your machine. Explore streaming responses and the operational details behind every request.</p>
+    </section>
+    <div class="workspace">
+      <aside class="controls">
+        <div class="section-label">RUNTIME</div>
+        <div id="status" class="status"><span class="status-dot"></span><span id="status-text">Checking model…</span></div>
+        <div class="model-card"><span class="small-label">CONFIGURED MODEL</span><strong id="model-name">Loading…</strong><span class="model-detail">Native inference backend</span></div>
+        <form id="settings-form" autocomplete="off">
+          <label for="api-key">Gateway API key</label>
+          <input id="api-key" type="password" placeholder="Paste your local key" autocomplete="off" spellcheck="false">
+          <button id="check-key" class="quiet-button" type="button">Check local key</button>
+          <p id="key-status" class="help" aria-live="polite">Use the generated GATEWAY_API_KEY value from this project's private .env file. No provider API key is needed. The key is kept only in page memory.</p>
+          <label for="max-tokens">Maximum output tokens <output id="tokens-value" for="max-tokens">128</output></label>
+          <input id="max-tokens" type="range" min="32" max="512" step="32" value="128">
+          <label for="temperature">Temperature <output id="temp-value" for="temperature">0.2</output></label>
+          <input id="temperature" type="range" min="0" max="2" step="0.1" value="0.2">
+        </form>
+        <div class="section-label monitoring-label">OBSERVABILITY</div>
+        <a class="monitor-link" href="http://127.0.0.1:3000/d/llm-inference/llm-inference-gateway" target="_blank" rel="noopener">Grafana dashboard <span>↗</span></a>
+        <a class="monitor-link" href="/metrics" target="_blank" rel="noopener">Gateway metrics <span>↗</span></a>
+        <p class="help">Grafana requires the optional local monitoring stack.</p>
+      </aside>
+      <section class="chat-panel" aria-label="Chat interface">
+        <div class="chat-heading"><div><span class="section-label">PLAYGROUND</span><h2>Ask the model.</h2></div><button id="clear" class="quiet-button" type="button">Clear chat</button></div>
+        <div id="messages" class="messages" aria-live="polite">
+          <div id="empty-state" class="empty-state"><div class="empty-icon">✳</div><h3>Start with a question.</h3><p>Compare an explanation, inspect a system,<br>or explore an inference tradeoff.</p>
+            <div class="suggestions"><button type="button" data-prompt="Explain KV caching in three short sentences.">Explain KV caching ↗</button><button type="button" data-prompt="Why does batching improve LLM throughput but sometimes increase latency?">Explore batching ↗</button><button type="button" data-prompt="Give me three checks for a GPU inference service that is running out of memory.">Debug GPU memory ↗</button></div>
+          </div>
+        </div>
+        <div id="request-stats" class="request-stats" aria-live="polite">Streaming enabled · Requests stay on your configured local backend</div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <form id="chat-form" class="composer"><label for="prompt" class="sr-only">Your message</label><textarea id="prompt" rows="2" maxlength="12000" placeholder="Ask about a model, a system, or an idea…" required></textarea><div class="composer-bottom"><span>Enter to send · Shift + Enter for a new line</span><button id="stop" type="button" hidden>Stop</button><button id="send" type="submit">Send message <span>↗</span></button></div></form>
+      </section>
+    </div>
+    <footer><span>Code, measurements, and operational decisions — in the open.</span><a href="https://sunilmehta.si" target="_blank" rel="noopener">sunilmehta.si ↗</a></footer>
+  </main>
+</body>
+</html>

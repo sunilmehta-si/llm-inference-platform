@@ -253,3 +253,17 @@ def test_fragmented_sse_and_no_word_count_estimates():
 def test_settings_require_secret():
     with pytest.raises(ValueError):
         Settings(api_key="")
+
+
+def test_chat_interface_served_without_exposing_key(client):
+    page = client.get("/")
+    assert page.status_code == 200
+    assert 'id="prompt"' in page.text and 'id="api-key"' in page.text
+    assert KEY not in page.text
+    assert "frame-ancestors 'none'" in page.headers["content-security-policy"]
+    config = client.get("/ui/config").json()
+    assert config == {"model": MODEL, "max_output_tokens": 512}
+    assert KEY not in str(config)
+    script = client.get("/assets/app.js")
+    assert script.status_code == 200
+    assert "localStorage" not in script.text and "innerHTML" not in script.text

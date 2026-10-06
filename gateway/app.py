@@ -5,10 +5,12 @@ import math
 import secrets
 import time
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
-from fastapi.responses import JSONResponse, Response, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, generate_latest
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -106,6 +108,27 @@ def create_app(settings: Settings | None = None, transport=None):
     app = FastAPI(title="LLM Inference Platform", version="0.1.0", lifespan=lifespan)
     app.add_middleware(BodyLimit, limit=settings.max_body_bytes)
     app.state.settings = settings
+    static = Path(__file__).parent / "static"
+    app.mount("/assets", StaticFiles(directory=static), name="assets")
+
+    @app.get("/", include_in_schema=False)
+    async def interface():
+        policy = (
+            "default-src 'self'; style-src 'self'; script-src 'self'; "
+            "connect-src 'self'; img-src 'self' data:; "
+            "frame-ancestors 'none'; base-uri 'none'"
+        )
+        return FileResponse(
+            static / "index.html",
+            headers={
+                "Content-Security-Policy": policy,
+                "X-Content-Type-Options": "nosniff",
+            },
+        )
+
+    @app.get("/ui/config", include_in_schema=False)
+    async def ui_config():
+        return {"model": settings.model, "max_output_tokens": settings.max_output_tokens}
 
     async def authorize(authorization: str | None = Header(default=None)):
         supplied = (authorization or "").removeprefix("Bearer ")

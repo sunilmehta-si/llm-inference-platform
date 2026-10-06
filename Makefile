@@ -32,6 +32,9 @@ helm-check:
 benchmark:
 	$(VENV)/python -m scripts.benchmark --backend "$${BACKEND_VERSION:?Set BACKEND_VERSION}" --output benchmarks/local.json
 
+report:
+	$(VENV)/python -m scripts.report
+
 observability:
 	docker compose -f deploy/compose.yaml up -d
 

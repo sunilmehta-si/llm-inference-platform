@@ -4,6 +4,10 @@
 
 Built by [Sunil Mehta](https://github.com/sunilmehta-si), Lead DevOps, MLOps & Platform Engineer.
 
+[![CI](https://github.com/sunilmehta-si/llm-inference-platform/actions/workflows/ci.yaml/badge.svg)](https://github.com/sunilmehta-si/llm-inference-platform/actions/workflows/ci.yaml)
+
+**[Full local walkthrough](docs/local-walkthrough.md)** · **[Measured GPU results](benchmarks/README.md)**
+
 This project explores the operational side of LLM inference: streaming, admission control,
 timeouts, model readiness, performance measurement, and deployment. Model computation runs
 natively on the Mac GPU through vLLM-Metal. A separate Python gateway provides a portable
@@ -24,6 +28,7 @@ flowchart LR
 | Component | Responsibility |
 |---|---|
 | Gateway | Bearer authentication, model allowlist, body/output limits, rate limiting, bounded concurrency, streaming proxy, timeouts |
+| Browser chat | Streaming conversation, model readiness, token/temperature controls, stop generation, per-request timing |
 | Engine | Model loading, tokenization, inference, batching, KV cache; engine-owned scheduling |
 | Benchmark | First-content latency, completion latency, reported token throughput, errors, hardware/config metadata |
 | Monitoring | Request outcomes, inflight requests, latency histograms, reported output tokens |
@@ -66,6 +71,9 @@ set +a
 
 The engine binds to `127.0.0.1:8001`; the gateway binds to `127.0.0.1:8000`.
 Swagger documentation is at <http://127.0.0.1:8000/docs>.
+The **chat frontend** is at <http://127.0.0.1:8000/>. Paste your private `.env` API key into the
+left panel, type a question in the bottom message box, and click **Send message**. The key stays
+in page memory and is not saved to browser storage. Answers render as text, not executable HTML.
 `make key` generates a private `.env`, refuses to overwrite an existing file, and never prints
 its credential. Model weights are downloaded from Hugging Face into the engine's local cache.
 
@@ -87,6 +95,8 @@ and arbitrary model switching are rejected. The engine API remains reachable onl
 ## Measure inference
 
 ```bash
+# Record the checkpoint revision from the local Hugging Face cache.
+export MODEL_REVISION="$(cat "$HOME/.cache/huggingface/hub/models--mlx-community--Qwen2.5-7B-Instruct-4bit/refs/main")"
 # Use the actual engine version reported by your installation.
 .venv/bin/python -m scripts.benchmark \
   --backend 'vllm-metal 0.30.0' \
@@ -106,6 +116,8 @@ and queueing; it is not isolated decode throughput. Any failed measured request 
 exit unsuccessfully while preserving the report.
 
 See [benchmark evidence](benchmarks/README.md) and [measurement methodology](docs/benchmarking.md).
+To reproduce a recorded checkpoint, set `MODEL_REVISION` before `make engine`; the startup script
+passes it to the engine. An omitted revision follows the model repository's current default branch.
 
 ## Monitoring
 
@@ -167,6 +179,13 @@ CUDA performance or production readiness.
 - After streaming headers are sent, backend failures are represented by an SSE error and
   `[DONE]`; the original HTTP status cannot then change. Monitor stream outcomes, not only HTTP 200.
 - Treat benchmark results as measurements of a documented workload, not production SLAs.
+
+## Observed on the Mac
+
+The initial Qwen2.5 7B 4-bit run on an M5 Pro / 48 GiB Mac completed **24/24 measured requests**.
+Aggregate output throughput was **40.29 tokens/s at concurrency 1** and **60.07 tokens/s at
+concurrency 4**. Higher concurrency also increased first-token and completion latency; see the
+[raw reports and comparison](benchmarks/README.md) before interpreting the throughput improvement.
 
 Further discussion: [architecture and tradeoffs](docs/architecture.md).
 

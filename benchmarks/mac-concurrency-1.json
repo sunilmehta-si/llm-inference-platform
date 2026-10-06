@@ -1,0 +1,135 @@
+{
+  "timestamp_utc": "2026-10-06T05:58:33.079283+00:00",
+  "backend": "vllm-metal 0.30.0 / vLLM 0.30.0",
+  "model_revision": "c26a38f6a37d0a51b4e9a1eb3026530fa35d9fed",
+  "model": "mlx-community/Qwen2.5-7B-Instruct-4bit",
+  "hardware": {
+    "os": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "architecture": "arm64",
+    "chip": "Apple M5 Pro",
+    "memory_bytes": "51539607552"
+  },
+  "configuration": {
+    "requests": 12,
+    "concurrency": 1,
+    "max_tokens": 128,
+    "warmup_requests": 2,
+    "temperature": 0,
+    "prompt_set": "devops-short-v1"
+  },
+  "summary": {
+    "successful_requests": 12,
+    "failed_requests": 0,
+    "wall_seconds": 31.72040020901477,
+    "latency_p50_seconds": 3.1086824999947567,
+    "latency_p95_seconds": 3.2843618958067964,
+    "ttft_p50_seconds": 0.09154793749621604,
+    "ttft_p95_seconds": 0.14111827673914376,
+    "aggregate_output_tokens_per_second": 40.28952950085413,
+    "mean_end_to_end_tokens_per_second": 40.06973918517155
+  },
+  "limitations": [
+    "Small synthetic workload; percentiles are descriptive, not capacity guarantees.",
+    "Timing includes gateway/network/queueing; token counts come from backend usage only.",
+    "Warmups excluded; repeated prompts may benefit from backend prefix caching.",
+    "Hardware inventory is not a GPU utilization measurement."
+  ],
+  "requests": [
+    {
+      "index": 0,
+      "success": true,
+      "completion_tokens": 42,
+      "duration_seconds": 1.109784041007515,
+      "ttft_seconds": 0.11134950001724064,
+      "end_to_end_tokens_per_second": 37.84520091122449
+    },
+    {
+      "index": 1,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.266455458011478,
+      "ttft_seconds": 0.12215558299794793,
+      "end_to_end_tokens_per_second": 39.18620708145907
+    },
+    {
+      "index": 2,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.306247542001074,
+      "ttft_seconds": 0.1075146249786485,
+      "end_to_end_tokens_per_second": 38.714584547571185
+    },
+    {
+      "index": 3,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.196635416999925,
+      "ttft_seconds": 0.13592533298651688,
+      "end_to_end_tokens_per_second": 40.04210155443041
+    },
+    {
+      "index": 4,
+      "success": true,
+      "completion_tokens": 42,
+      "duration_seconds": 1.0863490420160815,
+      "ttft_seconds": 0.0908420420018956,
+      "end_to_end_tokens_per_second": 38.66160725106826
+    },
+    {
+      "index": 5,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.103906457981793,
+      "ttft_seconds": 0.07365104099153541,
+      "end_to_end_tokens_per_second": 41.23835615949184
+    },
+    {
+      "index": 6,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.11345854200772,
+      "ttft_seconds": 0.0875897090008948,
+      "end_to_end_tokens_per_second": 41.111836972609545
+    },
+    {
+      "index": 7,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.056058291986119,
+      "ttft_seconds": 0.09225383299053647,
+      "end_to_end_tokens_per_second": 41.88401783292339
+    },
+    {
+      "index": 8,
+      "success": true,
+      "completion_tokens": 42,
+      "duration_seconds": 1.052386249997653,
+      "ttft_seconds": 0.08278425000025891,
+      "end_to_end_tokens_per_second": 39.90930136163758
+    },
+    {
+      "index": 9,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.206545124994591,
+      "ttft_seconds": 0.1474652079923544,
+      "end_to_end_tokens_per_second": 39.91835293452043
+    },
+    {
+      "index": 10,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.173318291985197,
+      "ttft_seconds": 0.08969345901277848,
+      "end_to_end_tokens_per_second": 40.336325644763626
+    },
+    {
+      "index": 11,
+      "success": true,
+      "completion_tokens": 128,
+      "duration_seconds": 3.0484190420247614,
+      "ttft_seconds": 0.07796175000839867,
+      "end_to_end_tokens_per_second": 41.9889779703588
+    }
+  ]
+}

@@ -7,6 +7,10 @@ if [[ -f .env ]]; then
   source .env
   set +a
 fi
-exec vllm serve "${MODEL_ID:-mlx-community/Qwen2.5-7B-Instruct-4bit}" \
+revision_args=()
+if [[ -n "${MODEL_REVISION:-}" ]]; then
+  revision_args=(--revision "$MODEL_REVISION")
+fi
+exec vllm serve "${MODEL_ID:-mlx-community/Qwen2.5-7B-Instruct-4bit}" "${revision_args[@]}" \
   --host 127.0.0.1 --port 8001 \
   --max-model-len 4096 --max-num-seqs 4
