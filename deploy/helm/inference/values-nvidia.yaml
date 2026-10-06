@@ -1,0 +1,3 @@
+# Deployment blueprint; requires an NVIDIA-equipped Linux cluster.
+engine:
+  enabled: true

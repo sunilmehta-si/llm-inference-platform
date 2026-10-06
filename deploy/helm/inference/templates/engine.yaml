@@ -1,0 +1,68 @@
+{{- if .Values.engine.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-models
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests: {storage: {{ .Values.engine.storageSize }}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-engine
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector:
+    matchLabels: {app: "{{ .Release.Name }}-engine"}
+  template:
+    metadata:
+      labels: {app: "{{ .Release.Name }}-engine"}
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector: {{ toJson .Values.engine.nodeSelector }}
+      tolerations: {{ toJson .Values.engine.tolerations }}
+      containers:
+        - name: engine
+          image: {{ .Values.engine.image | quote }}
+          args:
+            - --model
+            - {{ .Values.engine.model | quote }}
+            - --host
+            - "0.0.0.0"
+            - --port
+            - "8001"
+            - --max-model-len
+            - "4096"
+            - --max-num-seqs
+            - "4"
+          ports: [{containerPort: 8001}]
+          env: [{name: HF_HOME, value: /models}]
+          resources:
+            requests: {cpu: "2", memory: 8Gi, nvidia.com/gpu: "1"}
+            limits: {cpu: "8", memory: 24Gi, nvidia.com/gpu: "1"}
+          startupProbe:
+            httpGet: {path: /health, port: 8001}
+            periodSeconds: 10
+            failureThreshold: 180
+          readinessProbe:
+            httpGet: {path: /health, port: 8001}
+          volumeMounts:
+            - {name: models, mountPath: /models}
+            - {name: shm, mountPath: /dev/shm}
+      volumes:
+        - name: models
+          persistentVolumeClaim: {claimName: "{{ .Release.Name }}-models"}
+        - name: shm
+          emptyDir: {medium: Memory, sizeLimit: 2Gi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-engine
+spec:
+  selector: {app: "{{ .Release.Name }}-engine"}
+  ports: [{port: 8001, targetPort: 8001}]
+{{- end }}

@@ -1,0 +1,15 @@
+gateway:
+  image: ghcr.io/sunilmehta-si/llm-inference-platform:0.1.0
+  # Create this Secret outside Helm; it must contain GATEWAY_API_KEY.
+  existingSecret: ""
+  backendUrl: ""
+  model: Qwen/Qwen2.5-7B-Instruct
+  maxInflight: 4
+  requestsPerMinute: 60
+engine:
+  enabled: false
+  image: vllm/vllm-openai:v0.11.0
+  model: Qwen/Qwen2.5-7B-Instruct
+  storageSize: 30Gi
+  nodeSelector: {}
+  tolerations: []

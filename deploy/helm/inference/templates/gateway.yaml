@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: "{{ .Release.Name }}-gateway"}
+  template:
+    metadata:
+      labels: {app: "{{ .Release.Name }}-gateway"}
+    spec:
+      automountServiceAccountToken: false
+      securityContext: {runAsNonRoot: true, runAsUser: 10001}
+      containers:
+        - name: gateway
+          image: {{ .Values.gateway.image | quote }}
+          ports: [{containerPort: 8000}]
+          env:
+            - name: GATEWAY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Set gateway.existingSecret" .Values.gateway.existingSecret }}
+                  key: GATEWAY_API_KEY
+            - name: BACKEND_URL
+              value: {{ default (printf "http://%s-engine:8001" .Release.Name) .Values.gateway.backendUrl | quote }}
+            - {name: MODEL_ID, value: {{ .Values.gateway.model | quote }}}
+            - {name: MAX_INFLIGHT, value: {{ .Values.gateway.maxInflight | quote }}}
+            - {name: REQUESTS_PER_MINUTE, value: {{ .Values.gateway.requestsPerMinute | quote }}}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+          readinessProbe:
+            httpGet: {path: /readyz, port: 8000}
+            timeoutSeconds: 6
+          livenessProbe:
+            httpGet: {path: /healthz, port: 8000}
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-gateway
+spec:
+  selector: {app: "{{ .Release.Name }}-gateway"}
+  ports: [{port: 8000, targetPort: 8000}]

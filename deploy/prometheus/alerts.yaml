@@ -1,0 +1,21 @@
+groups:
+  - name: inference
+    rules:
+      - alert: InferenceBackendUnavailable
+        expr: up{job="engine"} == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Inference engine metrics unavailable; check /readyz and engine process"
+      - alert: InferenceRequestFailures
+        expr: rate(llm_requests_total{outcome="error"}[5m]) > 0.05
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Inference requests failing; inspect timeouts, memory, and backend logs"
+      - alert: InferenceCapacityRejections
+        expr: rate(llm_rejected_total{reason="capacity"}[5m]) > 0.1
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: "Admission limit reached; reduce demand or tune model/concurrency"
