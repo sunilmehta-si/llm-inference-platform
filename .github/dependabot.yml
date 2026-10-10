@@ -12,6 +12,9 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      # pydantic pins an exact pydantic-core; it is updated through pydantic, never on its own.
+      - dependency-name: pydantic-core
   - package-ecosystem: docker
     directory: /
     schedule:
