@@ -1,5 +1,7 @@
 # LLM Inference Platform
 
+[![ci](https://github.com/sunilmehta-si/llm-inference-platform/actions/workflows/ci.yaml/badge.svg)](https://github.com/sunilmehta-si/llm-inference-platform/actions/workflows/ci.yaml)
+
 **GPU-backed LLM serving on Apple Silicon, with an observable API gateway and reproducible benchmarks.**
 
 Built by [Sunil Mehta](https://github.com/sunilmehta-si), Lead DevOps, MLOps & Platform Engineer.
@@ -210,3 +212,12 @@ benchmarks/              reproducible measured evidence
 - [vLLM production metrics](https://docs.vllm.ai/en/latest/usage/metrics/)
 
 Code is MIT licensed. Model weights and third-party components retain their own licenses.
+
+## Related projects
+
+Other open-source infrastructure work by [Sunil Mehta](https://github.com/sunilmehta-si):
+
+- [agentic-code-review-tool](https://github.com/sunilmehta-si/agentic-code-review-tool): Scanner-grounded AI code review for the whole pull request: app, infrastructure and AI/agent code.
+- [k8s-gpu-scheduler-benchmark](https://github.com/sunilmehta-si/k8s-gpu-scheduler-benchmark): Benchmarks Kubernetes GPU schedulers (default, Kueue, Volcano, KAI) in simulation and on real clusters.
+- [ai-devsecops-cicd](https://github.com/sunilmehta-si/ai-devsecops-cicd): Reference DevSecOps pipeline for LLM and AI-agent services: AI security tests, SBOM/AI-BOM, signing, admission policy.
+- [jev-inference-router](https://github.com/sunilmehta-si/jev-inference-router): Observable decision routing for local GPU inference, evaluated against rule-based and classifier baselines.
