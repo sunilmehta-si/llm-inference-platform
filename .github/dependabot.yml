@@ -1,10 +1,14 @@
 # Pinned action SHAs, the container base image and Python dependencies stay current via weekly update PRs.
+# Each update waits 14 days after a release, so a compromised or withdrawn release is usually found before it is
+# proposed. Security updates are not delayed.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
     groups:
       actions:
         patterns: ["*"]
@@ -12,6 +16,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
     ignore:
       # pydantic pins an exact pydantic-core; it is updated through pydantic, never on its own.
       - dependency-name: pydantic-core
@@ -19,3 +25,5 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 14
