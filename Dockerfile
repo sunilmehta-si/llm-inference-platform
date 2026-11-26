@@ -1,4 +1,6 @@
-FROM python:3.13-slim
+# The base image by digest, so every build starts from the same bytes; Dependabot moves the digest (docker
+# ecosystem, after its 14-day cooldown) when python:3.13-slim is rebuilt.
+FROM python:3.13-slim@sha256:7249d5587b78209a006dc4a3b5340678f84ea729239193aa559962cd8c1fce50
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY pyproject.toml ./
